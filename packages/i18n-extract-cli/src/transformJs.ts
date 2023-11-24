@@ -159,13 +159,17 @@ function transformJs(code: string, options: transformOptions): GeneratorResult {
   let hasImportI18n = false // 文件是否导入过i18n
   let hasTransformed = false // 文件里是否存在中文转换，有的话才有必要导入i18n
 
-  function getCallExpression(identifier: string, quote = "'"): string {
+  function getCallExpression(identifier: string, quote = "'", originalText = ''): string {
     const callerName = caller ? caller + '.' : ''
-    const expression = `${callerName}${functionName}(${quote}${identifier}${quote})`
+    const expression = `${callerName}${functionName}(${quote}${identifier}${quote}).d(${quote}${
+      originalText || identifier
+    }${quote})`
+    console.log('expression', expression)
     return expression
   }
 
-  function getReplaceValue(translationKey: string, params?: TemplateParams) {
+  function getReplaceValue(translationKey: string, originalText = '', params?: TemplateParams) {
+    console.log('getReplaceValue', translationKey, originalText, params)
     if (!functionName) {
       throw new Error('functionName is required')
     }
@@ -187,7 +191,7 @@ function transformJs(code: string, options: transformOptions): GeneratorResult {
       }
     } else {
       // i18n标记没参数的情况
-      expression = getCallExpression(translationKey)
+      expression = getCallExpression(translationKey, "'", originalText)
       return template.expression(expression)()
     }
   }
@@ -229,7 +233,7 @@ function transformJs(code: string, options: transformOptions): GeneratorResult {
           if (includeChinese(value)) {
             hasTransformed = true
             const translationKey = Collector.add(value, customizeKey)
-            path.replaceWith(getReplaceValue(translationKey))
+            path.replaceWith(getReplaceValue(translationKey, value))
           }
           path.skip()
         },
@@ -274,7 +278,7 @@ function transformJs(code: string, options: transformOptions): GeneratorResult {
             hasTransformed = true
             const translationKey = Collector.add(value, customizeKey)
             const slotParams = isEmpty(params) ? undefined : params
-            path.replaceWith(getReplaceValue(translationKey, slotParams))
+            path.replaceWith(getReplaceValue(translationKey, value, slotParams))
           }
         },
 
@@ -283,7 +287,9 @@ function transformJs(code: string, options: transformOptions): GeneratorResult {
           if (includeChinese(value)) {
             hasTransformed = true
             const translationKey = Collector.add(value.trim(), customizeKey)
-            path.replaceWith(t.jSXExpressionContainer(getReplaceValue(translationKey)))
+            path.replaceWith(
+              t.jSXExpressionContainer(getReplaceValue(translationKey, value.trim()))
+            )
           }
           path.skip()
         },
@@ -295,7 +301,7 @@ function transformJs(code: string, options: transformOptions): GeneratorResult {
             const value = node.value.value
             const translationKey = Collector.add(value, customizeKey)
             const jsxIdentifier = t.jsxIdentifier(node.name.name as string)
-            const jsxContainer = t.jSXExpressionContainer(getReplaceValue(translationKey))
+            const jsxContainer = t.jSXExpressionContainer(getReplaceValue(translationKey, value))
             hasTransformed = true
             path.replaceWith(t.jsxAttribute(jsxIdentifier, jsxContainer))
             path.skip()
@@ -393,10 +399,11 @@ function transformJs(code: string, options: transformOptions): GeneratorResult {
           if (t.isStringLiteral(path.node.key)) {
             if (includeChinese(path.node.key.value)) {
               hasTransformed = true
-              const translationKey = Collector.add(path.node.key.value, customizeKey)
+              const value = path.node.key.value
+              const translationKey = Collector.add(value, customizeKey)
               path.replaceWith(
                 t.objectProperty(
-                  getReplaceValue(translationKey),
+                  getReplaceValue(translationKey, value),
                   path.node.value,
                   true,
                   path.node.shorthand,
@@ -411,11 +418,12 @@ function transformJs(code: string, options: transformOptions): GeneratorResult {
           if (t.isStringLiteral(path.node.key)) {
             if (includeChinese(path.node.key.value)) {
               hasTransformed = true
-              const translationKey = Collector.add(path.node.key.value, customizeKey)
+              const value = path.node.key.value
+              const translationKey = Collector.add(value, customizeKey)
               path.replaceWith(
                 t.objectMethod(
                   path.node.kind,
-                  getReplaceValue(translationKey),
+                  getReplaceValue(translationKey, value),
                   path.node.params,
                   path.node.body,
                   true,
