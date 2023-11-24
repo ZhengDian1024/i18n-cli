@@ -1,6 +1,6 @@
 {
-  "name": "@ifreeovo/translate-utils",
-  "version": "1.1.0",
+  "name": "i18n-translate-utils",
+  "version": "0.0.1",
   "description": "翻译工具函数，支持有道，谷歌",
   "publishConfig": {
     "access": "public"
@@ -37,11 +37,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/IFreeOvO/i18n-cli.git",
+    "url": "https://github.com/ZhengDian1024/i18n-cli.git",
     "directory": "packages/translate-utils"
   },
   "bugs": {
-    "url": "https://github.com/IFreeOvO/i18n-cli/issues"
+    "url": "https://github.com/ZhengDian1024/i18n-cli/issues"
   },
-  "homepage": "https://github.com/IFreeOvO/i18n-cli/tree/master/packages/translate-utils"
+  "homepage": "https://github.com/ZhengDian1024/i18n-cli"
 }

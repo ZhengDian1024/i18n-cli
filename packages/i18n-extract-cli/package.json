@@ -1,6 +1,6 @@
 {
-  "name": "@ifreeovo/i18n-extract-cli",
-  "version": "3.3.2",
+  "name": "i18n-transform-cli",
+  "version": "0.0.1",
   "description": "这是一款能够自动将代码里的中文转成i18n国际化标记的命令行工具。当然，你也可以用它实现将中文语言包自动翻译成其他语言。适用于vue2、vue3和react",
   "publishConfig": {
     "access": "public"
@@ -97,11 +97,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/IFreeOvO/i18n-cli.git",
+    "url": "https://github.com/ZhengDian1024/i18n-cli.git",
     "directory": "packages/i18n-extract-cli"
   },
   "bugs": {
-    "url": "https://github.com/IFreeOvO/i18n-cli/issues"
+    "url": "https://github.com/ZhengDian1024/i18n-cli/issues"
   },
-  "homepage": "https://github.com/IFreeOvO/i18n-cli/tree/master/packages/i18n-extract-cli"
+  "homepage": "https://github.com/ZhengDian1024/i18n-cli"
 }
