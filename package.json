@@ -42,13 +42,7 @@
       "prettier --cache --write"
     ],
     "*.ts?(x)": [
-      "eslint --fix",
       "prettier --cache --parser=typescript --write"
     ]
-  },
-  "config": {
-    "commitizen": {
-      "path": "cz-git"
-    }
   }
 }

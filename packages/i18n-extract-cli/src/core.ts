@@ -54,8 +54,8 @@ function getSourceFilePaths(input: string, exclude: string[]): string[] {
 
 function saveLocale(localePath: string) {
   const keyMap = Collector.getKeyMap()
+  console.log('keyMap', keyMap)
   const localeAbsolutePath = getAbsolutePath(process.cwd(), localePath)
-
   if (!fs.existsSync(localeAbsolutePath)) {
     fs.ensureFileSync(localeAbsolutePath)
   }
@@ -125,82 +125,88 @@ async function getTranslationConfig() {
   const cache = fs.readFileSync(cachePath, 'utf8') || '{}'
   const oldConfigCache: InquirerResult = JSON.parse(cache)
 
-  const answers = await inquirer.prompt([
-    {
-      type: 'list',
-      name: 'translator',
-      message: '请选择翻译接口',
-      default: YOUDAO,
-      choices: [
-        { name: '有道翻译', value: YOUDAO },
-        { name: '谷歌翻译', value: GOOGLE },
-        { name: '百度翻译', value: BAIDU },
-      ],
-      when(answers) {
-        return !answers.skipTranslate
-      },
-    },
-    {
-      type: 'input',
-      name: 'proxy',
-      message: '使用谷歌服务需要翻墙，请输入代理地址',
-      default: oldConfigCache.proxy || '',
-      when(answers) {
-        return answers.translator === GOOGLE
-      },
-      validate(input) {
-        return input.length === 0 ? '代理地址不能为空' : true
-      },
-    },
-    {
-      type: 'input',
-      name: 'key',
-      message: '请输入有道翻译appKey',
-      default: oldConfigCache.key || '',
-      when(answers) {
-        return answers.translator === YOUDAO
-      },
-      validate(input) {
-        return input.length === 0 ? 'appKey不能为空' : true
-      },
-    },
-    {
-      type: 'input',
-      name: 'secret',
-      message: '请输入有道翻译appSecret',
-      default: oldConfigCache.secret || '',
-      when(answers) {
-        return answers.translator === YOUDAO
-      },
-      validate(input) {
-        return input.length === 0 ? 'appSecret不能为空' : true
-      },
-    },
-    {
-      type: 'input',
-      name: 'key',
-      message: '请输入百度翻译appId',
-      default: oldConfigCache.key || '',
-      when(answers) {
-        return answers.translator === BAIDU
-      },
-      validate(input) {
-        return input.length === 0 ? 'appKey不能为空' : true
-      },
-    },
-    {
-      type: 'input',
-      name: 'secret',
-      message: '请输入百度翻译appSecret',
-      default: oldConfigCache.secret || '',
-      when(answers) {
-        return answers.translator === BAIDU
-      },
-      validate(input) {
-        return input.length === 0 ? 'appSecret不能为空' : true
-      },
-    },
-  ])
+  // const answers = await inquirer.prompt([
+  //   {
+  //     type: 'list',
+  //     name: 'translator',
+  //     message: '请选择翻译接口',
+  //     default: YOUDAO,
+  //     choices: [
+  //       { name: '有道翻译', value: YOUDAO },
+  //       { name: '谷歌翻译', value: GOOGLE },
+  //       { name: '百度翻译', value: BAIDU },
+  //     ],
+  //     when(answers) {
+  //       return !answers.skipTranslate
+  //     },
+  //   },
+  //   {
+  //     type: 'input',
+  //     name: 'proxy',
+  //     message: '使用谷歌服务需要翻墙，请输入代理地址',
+  //     default: oldConfigCache.proxy || '',
+  //     when(answers) {
+  //       return answers.translator === GOOGLE
+  //     },
+  //     validate(input) {
+  //       return input.length === 0 ? '代理地址不能为空' : true
+  //     },
+  //   },
+  //   {
+  //     type: 'input',
+  //     name: 'key',
+  //     message: '请输入有道翻译appKey',
+  //     default: oldConfigCache.key || '',
+  //     when(answers) {
+  //       return answers.translator === YOUDAO
+  //     },
+  //     validate(input) {
+  //       return input.length === 0 ? 'appKey不能为空' : true
+  //     },
+  //   },
+  //   {
+  //     type: 'input',
+  //     name: 'secret',
+  //     message: '请输入有道翻译appSecret',
+  //     default: oldConfigCache.secret || '',
+  //     when(answers) {
+  //       return answers.translator === YOUDAO
+  //     },
+  //     validate(input) {
+  //       return input.length === 0 ? 'appSecret不能为空' : true
+  //     },
+  //   },
+  //   {
+  //     type: 'input',
+  //     name: 'key',
+  //     message: '请输入百度翻译appId',
+  //     default: oldConfigCache.key || '',
+  //     when(answers) {
+  //       return answers.translator === BAIDU
+  //     },
+  //     validate(input) {
+  //       return input.length === 0 ? 'appKey不能为空' : true
+  //     },
+  //   },
+  //   {
+  //     type: 'input',
+  //     name: 'secret',
+  //     message: '请输入百度翻译appSecret',
+  //     default: oldConfigCache.secret || '',
+  //     when(answers) {
+  //       return answers.translator === BAIDU
+  //     },
+  //     validate(input) {
+  //       return input.length === 0 ? 'appSecret不能为空' : true
+  //     },
+  //   },
+  // ])
+
+  const answers = {
+    translator: 'youdao',
+    key: '5b2194113e67d35a',
+    secret: 'ZQ78pgasKncCNBjzDryKAsoeBPpd4o19',
+  } as InquirerResult
 
   const newConfigCache = Object.assign(oldConfigCache, answers)
   fs.writeFileSync(cachePath, JSON.stringify(newConfigCache), 'utf8')
@@ -223,6 +229,7 @@ function formatCode(code: string, ext: string, prettierConfig: PrettierConfig): 
 
 export default async function (options: CommandOptions) {
   let i18nConfig = getI18nConfig(options)
+  console.log('i18nConfig', i18nConfig)
   if (!i18nConfig.skipTranslate) {
     const translationConfig = await getTranslationConfig()
     i18nConfig = merge(i18nConfig, translationConfig)
@@ -297,6 +304,7 @@ export default async function (options: CommandOptions) {
 
     const extName = path.extname(localePath)
     const savePath = localePath.replace(extName, `.${localeFileType}`)
+    console.log('savePath', savePath)
     saveLocale(savePath)
     bar.stop()
     const endTime = new Date().getTime()
@@ -304,6 +312,7 @@ export default async function (options: CommandOptions) {
   }
 
   console.log('') // 空一行
+  console.log('localePath', localePath)
   if (!skipTranslate) {
     await translate(localePath, locales, oldPrimaryLang, {
       translator: i18nConfig.translator,

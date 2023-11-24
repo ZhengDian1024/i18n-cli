@@ -77,6 +77,7 @@ export default async function (
   }
   log.verbose('当前使用的翻译器：', options.translator)
   const primaryLangPath = getAbsolutePath(process.cwd(), localePath)
+  // 中文的翻译 json map
   const newPrimaryLang = flatObjectDeep(getLang(primaryLangPath))
   const localeFileType = StateManager.getToolConfig().localeFileType
 
@@ -107,7 +108,7 @@ export default async function (
         willTranslateText[key] = newPrimaryLang[key]
       }
     }
-
+    console.log('willTranslateText', willTranslateText)
     // 翻译新增键值对内容
     const translator = new Translator({
       provider: options.translator || YOUDAO,
@@ -119,9 +120,11 @@ export default async function (
       ...newTargetLangPack,
       ...incrementalTranslation,
     }
-
-    const fileContent = spreadObject(newTargetLangPack)
-    saveLocaleFile(fileContent, targetLocalePath)
+    console.log('incrementalTranslation', incrementalTranslation)
+    // console.log('newTargetLangPack', newTargetLangPack);
+    // const fileContent = spreadObject(newTargetLangPack)
+    // console.log('fileContent', fileContent);
+    saveLocaleFile(newTargetLangPack, targetLocalePath)
     log.info(`完成${targetLocale}语言包翻译`)
   }
 }
