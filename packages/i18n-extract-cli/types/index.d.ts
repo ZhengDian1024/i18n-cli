@@ -21,6 +21,7 @@ export type CustomizeKey = (key: string, path?: string) => string
 export interface Rule {
   caller: string
   functionName?: string
+  defaultFunctionName?: string
   importDeclaration: string
   customizeKey: CustomizeKey
   // TODO: 可优化成根据范型动态生成规则

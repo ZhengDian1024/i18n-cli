@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "description": "提取项目里的中文，并替换为i18n函数",
+  "description": "提取项目里的中文，并替换为自定义的i18n函数",
   "scripts": {
     "preinstall": "only-allow pnpm",
     "prepare": "husky install",
@@ -11,7 +11,7 @@
     "version-packages": "changeset version",
     "release": "pnpm build && changeset publish"
   },
-  "author": "IFreeOvO",
+  "author": "zhengdian",
   "license": "MIT",
   "packageManager": "pnpm@7.11.0",
   "engines": {

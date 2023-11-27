@@ -20,6 +20,7 @@ module.exports = {
     ts: {
       caller: 'intl',
       functionName: 'get',
+      defaultFunctionName: 'd',
       customizeKey: function (key, currentFilePath) {
         console.log(key, currentFilePath)
         return `${currentFilePath.split('/').pop()}-${Math.random().toString(36).substr(2)}`
@@ -31,8 +32,8 @@ module.exports = {
     tsx: {
       caller: 'intl',
       functionName: 'get',
+      defaultFunctionName: 'd',
       customizeKey: function (key, currentFilePath) {
-        console.log(key, currentFilePath)
         return `${currentFilePath.split('/').pop().split('.')[0]}-${Math.random()
           .toString(36)
           .substr(2)}`
@@ -45,6 +46,7 @@ module.exports = {
   globalRule: {
     ignoreMethods: [], // 忽略指定函数调用的中文提取。例如想忽略sensor.track('中文')的提取。这里就写['sensor.track']
   },
+  incremental: true, // 增量提取
   // prettier配置，参考https://prettier.io/docs/en/options.html
   skipExtract: false, // 跳过提取中文阶段
   // 以下是和翻译相关的配置，注意搭配使用

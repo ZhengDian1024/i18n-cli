@@ -19,7 +19,7 @@ const MoreLink = () => (
   <Menu>
     <Menu.Item key="1">
       <a href="https://salon.netease.com/" target="_blank" rel="noreferrer">
-        {intl.get('index-1ut61msfkgu').d('Learning GO 学习系统')}
+        {intl.get('index-hbrmn4qcokg').d('Learning GO 学习系统')}
       </a>
     </Menu.Item>
     {/*<Menu.Item key="2">*/}
@@ -27,11 +27,15 @@ const MoreLink = () => (
     {/*        网易KM系统*/}
     {/*    </a>*/}
     {/*</Menu.Item>*/}
-    {/*<Menu.Item key="3">*/}
-    {/*    <a href="http://zhitu.netease.com/#/template?projectId=508065473142087680" target="_blank" rel="noreferrer">*/}
-    {/*        自助制图系统*/}
-    {/*    </a>*/}
-    {/*</Menu.Item>*/}
+    <Menu.Item key="3">
+      <a
+        href="http://zhitu.netease.com/#/template?projectId=508065473142087680"
+        target="_blank"
+        rel="noreferrer"
+      >
+        {intl.get('index-7wmp5qqlu0a').d('自助制图系统')}
+      </a>
+    </Menu.Item>
     {/*<Menu.Item key="4">*/}
     {/*    <a href="https://subtitles.ai.163.com/" target="_blank" rel="noreferrer">*/}
     {/*        易智字幕工具*/}
@@ -54,7 +58,7 @@ const Notebook = () => (
         target="_blank"
         rel="noreferrer"
       >
-        {intl.get('index-stol9ngw72g').d('管理员操作手册')}
+        {intl.get('index-yoj1neov9so').d('管理员操作手册')}
       </a>
     </Menu.Item>
     {/*<Menu.Item key="2">*/}
@@ -100,7 +104,7 @@ function Header(props: any) {
         <div className="right">
           <Dropdown overlay={Notebook} placement="bottomCenter">
             <div className="f-cp">
-              <BookOutlined /> <span>{intl.get('index-267coalcupe').d('指导手册')}</span>
+              <BookOutlined /> <span>{intl.get('index-sp3dcqbuu18').d('指导手册')}</span>
             </div>
           </Dropdown>
 

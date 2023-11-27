@@ -154,22 +154,32 @@ function pushStatement(
 
 function transformJs(code: string, options: transformOptions): GeneratorResult {
   const { rule } = options
-  const { caller, functionName, customizeKey, importDeclaration, functionSnippets, forceImport } =
-    rule
+  const {
+    caller,
+    functionName,
+    defaultFunctionName,
+    customizeKey,
+    importDeclaration,
+    functionSnippets,
+    forceImport,
+  } = rule
   let hasImportI18n = false // 文件是否导入过i18n
   let hasTransformed = false // 文件里是否存在中文转换，有的话才有必要导入i18n
 
   function getCallExpression(identifier: string, quote = "'", originalText = ''): string {
     const callerName = caller ? caller + '.' : ''
-    const expression = `${callerName}${functionName}(${quote}${identifier}${quote}).d(${quote}${
-      originalText || identifier
-    }${quote})`
+    let expression = `${callerName}${functionName}(${quote}${identifier}${quote})`
+    if (defaultFunctionName) {
+      expression = `${expression}.${defaultFunctionName}(${quote}${
+        originalText || identifier
+      }${quote})`
+    }
     console.log('expression', expression)
     return expression
   }
 
   function getReplaceValue(translationKey: string, originalText = '', params?: TemplateParams) {
-    console.log('getReplaceValue', translationKey, originalText, params)
+    // console.log('getReplaceValue', translationKey, originalText, params)
     if (!functionName) {
       throw new Error('functionName is required')
     }
@@ -198,6 +208,7 @@ function transformJs(code: string, options: transformOptions): GeneratorResult {
 
   function transformAST(code: string, options: transformOptions) {
     function getTraverseOptions() {
+      // @ts-ignore
       return {
         enter(path: NodePath) {
           const leadingComments = path.node.leadingComments
@@ -331,7 +342,6 @@ function transformJs(code: string, options: transformOptions): GeneratorResult {
             path.skip()
             return
           }
-
           // 无调用对象的情况，例如$t('xx')
           if (callee.type === 'Identifier' && callee.name === functionName) {
             path.skip()
@@ -349,6 +359,19 @@ function transformJs(code: string, options: transformOptions): GeneratorResult {
                 }
                 // 处理形如this.$t('xx')的情况
                 if (callee.object.type === 'ThisExpression' && caller === 'this') {
+                  path.skip()
+                  return
+                }
+              }
+
+              // 忽略 intl.get('xxxx').d('中文')会被套娃翻译的情况
+              if (callee.property.name === defaultFunctionName) {
+                if (
+                  callee.object.type === 'CallExpression' &&
+                  callee.object.callee.type === 'MemberExpression' &&
+                  'name' in callee.object.callee.object &&
+                  callee.object.callee.object.name === caller
+                ) {
                   path.skip()
                   return
                 }
