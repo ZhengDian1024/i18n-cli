@@ -36,11 +36,11 @@ const MoreLink = () => (
         {intl.get('index-7wmp5qqlu0a').d('自助制图系统')}
       </a>
     </Menu.Item>
-    {/*<Menu.Item key="4">*/}
-    {/*    <a href="https://subtitles.ai.163.com/" target="_blank" rel="noreferrer">*/}
-    {/*        易智字幕工具*/}
-    {/*    </a>*/}
-    {/*</Menu.Item>*/}
+    <Menu.Item key="4">
+      <a href="https://subtitles.ai.163.com/" target="_blank" rel="noreferrer">
+        {intl.get('index-3ke71zwd1sr').d('易智字幕工具')}
+      </a>
+    </Menu.Item>
     {/*<Menu.Item key="5">*/}
     {/*    <a href="https://easymeeting.ai.163.com/" target="_blank" rel="noreferrer">*/}
     {/*        易智语音转写*/}

@@ -229,7 +229,6 @@ function formatCode(code: string, ext: string, prettierConfig: PrettierConfig): 
 
 export default async function (options: CommandOptions) {
   let i18nConfig = getI18nConfig(options)
-  console.log('i18nConfig', i18nConfig)
   if (!i18nConfig.skipTranslate) {
     const translationConfig = await getTranslationConfig()
     i18nConfig = merge(i18nConfig, translationConfig)
